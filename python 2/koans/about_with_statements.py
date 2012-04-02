@@ -8,7 +8,7 @@
 from runner.koan import *
 
 import re  # For regular expression string comparisons
-
+import os  # So I can make this run with watchr
 
 class AboutWithStatements(Koan):
     def count_lines(self, file_name):
@@ -21,12 +21,13 @@ class AboutWithStatements(Koan):
                 return count
             finally:
                 f.close()
-        except IOError:
+        except IOError as e:
             # should never happen
             self.fail()
     
     def test_counting_lines(self):
-        self.assertEqual(__, self.count_lines("example_file.txt"))
+        path = os.path.join(os.path.dirname(__file__), '..', "example_file.txt")
+        self.assertEqual(4, self.count_lines(path))
     
     # ------------------------------------------------------------------
         
@@ -45,7 +46,8 @@ class AboutWithStatements(Koan):
             self.fail()
     
     def test_finding_lines(self):
-        self.assertEqual(__, self.find_line("example_file.txt"))
+        path = os.path.join(os.path.dirname(__file__), '..', "example_file.txt")
+        self.assertEqual('test\n', self.find_line(path))
     
     ## ------------------------------------------------------------------
     ## THINK ABOUT IT:
@@ -92,17 +94,22 @@ class AboutWithStatements(Koan):
         return count
     
     def test_counting_lines2(self):
-        self.assertEqual(__, self.count_lines2("example_file.txt"))
+        path = os.path.join(os.path.dirname(__file__), '..', "example_file.txt")
+        self.assertEqual(4, self.count_lines2(path))
     
     # ------------------------------------------------------------------
     
     def find_line2(self, file_name):
-        # Rewrite find_line using the Context Manager.
-        pass
+        with self.FileContextManager(file_name) as f:
+            for line in f.readlines():
+                match = re.search('e', line)
+                if match:
+                    return line
     
     def test_finding_lines2(self):
-        self.assertEqual(__, self.find_line2("example_file.txt"))
-        self.assertNotEqual(None, self.find_line2("example_file.txt"))
+        path = os.path.join(os.path.dirname(__file__), '..', "example_file.txt")
+        self.assertEqual('test\n', self.find_line2(path))
+        self.assertNotEqual(None, self.find_line2(path))
     
     # ------------------------------------------------------------------
     
@@ -114,4 +121,5 @@ class AboutWithStatements(Koan):
             return count
     
     def test_open_already_has_its_own_built_in_context_manager(self):
-        self.assertEqual(__, self.count_lines3("example_file.txt"))
+        path = os.path.join(os.path.dirname(__file__), '..', "example_file.txt")
+        self.assertEqual(4, self.count_lines3(path))

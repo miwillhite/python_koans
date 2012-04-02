@@ -33,9 +33,34 @@ from runner.koan import *
 #
 # Your goal is to write the score method.
 
-def score(dice):
-    # You need to write this method
-    pass
+def score(dice):    
+    summed_score = 0
+
+    # Deal with the sets first
+    for num in set(dice):
+        if num in [1,5]:
+            continue
+        if dice.count(num) >= 3:
+            summed_score += num * 100
+
+    # 1's are special
+    one_count = dice.count(1)
+    if one_count >= 3:
+        summed_score += 1000
+        summed_score += 100 * (one_count-3)
+    else:
+        summed_score += 100 * one_count
+        
+    # 5's are special
+    five_count = dice.count(5)
+    if five_count >= 3:
+        summed_score += 500
+        summed_score += 50 * (five_count-3)
+    else:
+        summed_score += 50 * five_count
+
+
+    return summed_score
 
 
 class AboutScoringProject(Koan):

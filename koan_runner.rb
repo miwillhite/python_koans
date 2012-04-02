@@ -1,0 +1,1 @@
+watch( 'python 2\/koans\/.+\.py' ) { |match| system('python ./python\ 2/contemplate_koans.py')}
